@@ -12,3 +12,11 @@ class Author:
     name: str
     bio: Optional[str]
     birthdate: Optional[datetime.date]
+
+
+@dataclasses.dataclass()
+class Book:
+    id: int
+    title: str
+    description: str
+    author_id: int
