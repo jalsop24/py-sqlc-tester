@@ -10,5 +10,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
 
+  shell:
+    build:
+      dockerfile: "shell.dockerfile"
+    command: ["/bin/bash"]
+    volumes:
+      - ./:/app
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    network_mode: "host"
+
 volumes:
   postgres_data:
