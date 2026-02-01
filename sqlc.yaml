@@ -1,13 +1,13 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "query.sql"
-    schema: "schema.sql"
+    queries: "src/queries"
+    schema: "src/schema.sql"
     codegen:
     - plugin: "py"
-      out: "src"
+      out: "src/py_sqlc_tester/db"
       options:
-        package: "foo"
+        package: "py_sqlc_tester.db"
         emit_sync_querier: true
         emit_async_querier: true
         query_parameter_limit: 5
