@@ -1,8 +1,8 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "src/queries"
-    schema: "src/schema.sql"
+    queries: "db/queries"
+    schema: "db/migrations"
     codegen:
     - plugin: "py"
       out: "src/py_sqlc_tester/db"

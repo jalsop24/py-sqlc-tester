@@ -16,7 +16,7 @@ INSERT INTO authors (
 ) VALUES (
   :p1, :p2
 )
-RETURNING id, name, bio
+RETURNING id, name, bio, birthdate
 """
 
 
@@ -27,13 +27,13 @@ WHERE id = :p1
 
 
 GET_AUTHOR = """-- name: get_author \\:one
-SELECT id, name, bio FROM authors
+SELECT id, name, bio, birthdate FROM authors
 WHERE id = :p1 LIMIT 1
 """
 
 
 LIST_AUTHORS = """-- name: list_authors \\:many
-SELECT id, name, bio FROM authors
+SELECT id, name, bio, birthdate FROM authors
 ORDER BY name
 """
 
@@ -50,6 +50,7 @@ class Querier:
             id=row[0],
             name=row[1],
             bio=row[2],
+            birthdate=row[3],
         )
 
     def delete_author(self, *, id: int) -> None:
@@ -63,6 +64,7 @@ class Querier:
             id=row[0],
             name=row[1],
             bio=row[2],
+            birthdate=row[3],
         )
 
     def list_authors(self) -> Iterator[models.Author]:
@@ -72,6 +74,7 @@ class Querier:
                 id=row[0],
                 name=row[1],
                 bio=row[2],
+                birthdate=row[3],
             )
 
 
@@ -87,6 +90,7 @@ class AsyncQuerier:
             id=row[0],
             name=row[1],
             bio=row[2],
+            birthdate=row[3],
         )
 
     async def delete_author(self, *, id: int) -> None:
@@ -100,6 +104,7 @@ class AsyncQuerier:
             id=row[0],
             name=row[1],
             bio=row[2],
+            birthdate=row[3],
         )
 
     async def list_authors(self) -> AsyncIterator[models.Author]:
@@ -109,4 +114,5 @@ class AsyncQuerier:
                 id=row[0],
                 name=row[1],
                 bio=row[2],
+                birthdate=row[3],
             )

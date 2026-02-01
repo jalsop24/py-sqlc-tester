@@ -2,6 +2,7 @@
 # versions:
 #   sqlc v1.30.0
 import dataclasses
+import datetime
 from typing import Optional
 
 
@@ -10,3 +11,4 @@ class Author:
     id: int
     name: str
     bio: Optional[str]
+    birthdate: Optional[datetime.date]
