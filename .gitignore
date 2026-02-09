@@ -12,4 +12,5 @@ wheels/
 .env
 
 src/py_sqlc_tester/db/authors.py
+src/py_sqlc_tester/db/books.py
 src/py_sqlc_tester/db/models.py
