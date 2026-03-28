@@ -18,3 +18,12 @@ FROM transactions;
 
 -- name: CountTransactions :one
 SELECT count(*) FROM transactions;
+
+-- name: SummaryByDescription :many
+SELECT
+    description,
+    SUM(amount)::Numeric(10, 4) AS total_amount,
+    COUNT(*) AS transaction_count
+FROM transactions
+GROUP BY description
+ORDER BY total_amount DESC;

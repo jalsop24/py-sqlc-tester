@@ -2,8 +2,9 @@
 # versions:
 #   sqlc v1.30.0
 # source: transactions.sql
+import dataclasses
 import decimal
-from typing import Optional
+from typing import AsyncIterator, Iterator, Optional
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -38,6 +39,24 @@ GET_TRANSACTION = """-- name: get_transaction \\:one
 SELECT id, amount, description, created_at FROM transactions
 WHERE id = :p1 LIMIT 1
 """
+
+
+SUMMARY_BY_DESCRIPTION = """-- name: summary_by_description \\:many
+SELECT
+    description,
+    SUM(amount)\\:\\:Numeric(10, 4) AS total_amount,
+    COUNT(*) AS transaction_count
+FROM transactions
+GROUP BY description
+ORDER BY total_amount DESC
+"""
+
+
+@dataclasses.dataclass()
+class SummaryByDescriptionRow:
+    description: Optional[str]
+    total_amount: decimal.Decimal
+    transaction_count: int
 
 
 class Querier:
@@ -78,6 +97,15 @@ class Querier:
             created_at=row[3],
         )
 
+    def summary_by_description(self) -> Iterator[SummaryByDescriptionRow]:
+        result = self._conn.execute(sqlalchemy.text(SUMMARY_BY_DESCRIPTION))
+        for row in result:
+            yield SummaryByDescriptionRow(
+                description=row[0],
+                total_amount=row[1],
+                transaction_count=row[2],
+            )
+
 
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
@@ -116,3 +144,12 @@ class AsyncQuerier:
             description=row[2],
             created_at=row[3],
         )
+
+    async def summary_by_description(self) -> AsyncIterator[SummaryByDescriptionRow]:
+        result = await self._conn.stream(sqlalchemy.text(SUMMARY_BY_DESCRIPTION))
+        async for row in result:
+            yield SummaryByDescriptionRow(
+                description=row[0],
+                total_amount=row[1],
+                transaction_count=row[2],
+            )
